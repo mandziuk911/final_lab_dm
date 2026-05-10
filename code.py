@@ -26,6 +26,7 @@ class StartState(State):
     next_states: list[State] = []
 
     def __init__(self):
+        self.next_states = []
         super().__init__()
 
     def check_self(self, char):
@@ -50,6 +51,7 @@ class DotState(State):
     next_states: list[State] = []
 
     def __init__(self):
+        self.next_states = []
         super().__init__()
 
     def check_self(self, char: str):
@@ -78,6 +80,7 @@ class StarState(State):
     next_states: list[State] = []
 
     def __init__(self, checking_state: State):
+        self.next_states = []
         self.next_states = [checking_state]
 
     def check_self(self, char):
@@ -105,7 +108,7 @@ class RegexFSM:
     curr_state: State = StartState()
 
     def __init__(self, regex_expr: str) -> None:
-
+        self.curr_state = StartState()
         prev_state = self.curr_state
         tmp_next_state = self.curr_state
 
@@ -178,3 +181,10 @@ if __name__ == "__main__":
     print(regex_compiled.check_string("aaaaaa4uhi"))  # True
     print(regex_compiled.check_string("4uhi"))  # True
     print(regex_compiled.check_string("meow"))  # False
+
+    regex = "1*2+3."
+    regex_compiled = RegexFSM(regex)
+    print(regex_compiled.check_string("111223x")) # True
+    print(regex_compiled.check_string("23!"))     # True
+    print(regex_compiled.check_string("113y"))    # False
+    print(regex_compiled.check_string("223"))     # False
