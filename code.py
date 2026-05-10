@@ -139,8 +139,35 @@ class RegexFSM:
 
         return new_state
 
-    def check_string(self):
-        pass  # Implement
+    def check_string(self, string: str):
+        states = self.curr_state.next_states
+
+        def dfs(state_idx: int, str_idx: int):
+            if state_idx == len(states):
+                return str_idx == len(string)
+            state = states[state_idx]
+            if isinstance(state, StarState):
+                if dfs(state_idx + 1, str_idx):
+                    return True
+                curr_str_idx = str_idx
+                while curr_str_idx < len(string) and state.check_self(string[curr_str_idx]):
+                    curr_str_idx += 1
+                    if dfs(state_idx + 1, curr_str_idx):
+                        return True
+                return False
+
+            elif isinstance(state, PlusState):
+                curr_str_idx = str_idx
+                while curr_str_idx < len(string) and state.check_self(string[curr_str_idx]):
+                    curr_str_idx += 1
+                    if dfs(state_idx + 1, curr_str_idx):
+                        return True
+                return False
+            else:
+                if str_idx < len(string) and state.check_self(string[str_idx]):
+                    return dfs(state_idx + 1, str_idx + 1)
+                return False
+        return dfs(0, 0)
 
 
 if __name__ == "__main__":
