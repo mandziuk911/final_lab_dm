@@ -53,7 +53,7 @@ class DotState(State):
         super().__init__()
 
     def check_self(self, char: str):
-        return super().check_self(char)
+        return True
 
 
 class AsciiState(State):
